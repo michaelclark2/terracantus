@@ -14,5 +14,3 @@ services:
     image: postgres
     environment:
       POSTGRES_PASSWORD: example
-    volumes:
-      - ./pg_data:/var/lib/postgresql/data
