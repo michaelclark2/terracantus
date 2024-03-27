@@ -8,9 +8,22 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: postgres
     environment:
       POSTGRES_PASSWORD: example
+      POSTGRES_USER: terracantus
+      PGUSER: terracantus
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+    healthcheck:
+      test: pg_isready
+      interval: 1s
+      timeout: 1s
+      retries: 3
+
+volumes:
+  pgdata:
