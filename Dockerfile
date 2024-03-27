@@ -3,8 +3,8 @@ ENV PYTHONUNBUFFERED 1
 
 RUN mkdir /app
 WORKDIR /app
-COPY requirements.* .
-RUN pip install -r requirements.dev.txt
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
 ADD . .
 
