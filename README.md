@@ -9,3 +9,7 @@ A platform to share field recordings
 - Run `pyenv virtualenv 3.11 terracantus`
 - Run `pip install -r requirements.dev.txt`
 - Run `invoke init` the first time to setup the app
+
+To start the dev server
+
+- `invoke dev`
