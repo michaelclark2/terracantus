@@ -2,8 +2,10 @@
 
 A platform to share field recordings
 
-## Setup Python environment
+## Setup environment
 
-- Install and setup pyenv
-- Run `pyenv virtualenv 3.10.8 terracantus`
-- Run `pip install -r requirement.dev.txt`
+- Install and setup [pyenv](https://github.com/pyenv/pyenv)
+- Run `pyenv install 3.11`
+- Run `pyenv virtualenv 3.11 terracantus`
+- Run `pip install -r requirements.dev.txt`
+- Run `invoke init` the first time to setup the app
