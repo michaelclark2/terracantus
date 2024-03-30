@@ -43,3 +43,20 @@ def init(c):
         "docker compose exec -it web python manage.py createsuperuser",
         pty=True,
     )
+
+
+@task
+def ecr(c):
+    c.run(
+        "aws ecr get-login-password --region us-east-1 | docker login \
+    --username AWS --password-stdin \
+    227557930319.dkr.ecr.us-east-1.amazonaws.com"
+    )
+
+
+@task(ecr)
+def deploy(c):
+    c.run(
+        "docker build -t 227557930319.dkr.ecr.us-east-1.amazonaws.com/webapp -f Dockerfile.prod ."
+    )
+    c.run("docker push 227557930319.dkr.ecr.us-east-1.amazonaws.com/webapp:latest")
