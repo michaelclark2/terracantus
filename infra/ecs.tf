@@ -36,7 +36,7 @@ resource "aws_ecs_task_definition" "webapp" {
     essential : true
     portMappings : [{ containerPort : 8000, protocol : "tcp" }]
     command : ["gunicorn", "-w", "3", "-b", ":8000", "terracantus.wsgi:application"]
-    environment : [{ name : "DATABASE_URL", value : "${local.db_url}" }]
+    environment : [{ name : "DATABASE_URL", value : "${local.db_url}" }, { name : "ALLOWED_HOSTS", value : "terracantus.com" }]
     logConfiguration : {
       logDriver : "awslogs",
       options : {
