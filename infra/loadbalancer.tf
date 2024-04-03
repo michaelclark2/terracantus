@@ -26,20 +26,12 @@ resource "aws_lb_target_group" "default-target-group" {
 
 }
 
-resource "aws_acm_certificate" "webapp-ssl-cert" {
-  provider                  = "aws.acm"
-  domain_name               = "terracantus.com"
-  subject_alternative_names = ["*.terracantus.com"]
-  validation_method         = "DNS"
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
 resource "aws_lb_listener" "ecs-alb-http-listener" {
   load_balancer_arn = aws_lb.production.id
-  port              = "80"
-  protocol          = "HTTP"
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.webapp-ssl-cert.arn
   depends_on        = [aws_lb_target_group.default-target-group]
 
   default_action {
