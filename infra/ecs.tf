@@ -16,30 +16,26 @@ resource "aws_ecs_service" "webapp" {
   }
   load_balancer {
     target_group_arn = aws_lb_target_group.default-target-group.arn
-    container_name   = "webapp"
-    container_port   = 8000
+    container_name   = "nginx"
+    container_port   = 80
   }
 }
-
 resource "aws_ecs_task_definition" "webapp" {
   family                   = "webapp"
   requires_compatibilities = ["FARGATE"]
-  runtime_platform {
-    operating_system_family = "LINUX"
-  }
-  network_mode       = "awsvpc"
-  cpu                = 256
-  memory             = 512
-  execution_role_arn = aws_iam_role.ecs-task-execution-role.arn
-  task_role_arn      = aws_iam_role.ecs-task-execution-role.arn
+  network_mode             = "awsvpc"
+  cpu                      = 256
+  memory                   = 512
+  execution_role_arn       = aws_iam_role.ecs-task-execution-role.arn
+  task_role_arn            = aws_iam_role.ecs-task-execution-role.arn
   container_definitions = jsonencode([{
     name : "webapp"
-    cpu : 256
+    cpu : 10
     memory : 512
     image : "${aws_ecr_repository.webapp.repository_url}:latest"
     essential : true
     portMappings : [{ containerPort : 8000, protocol : "tcp" }]
-    command : ["gunicorn", "-b", ":8000", "terracantus.wsgi:application"]
+    command : ["gunicorn", "-w", "3", "-b", ":8000", "terracantus.wsgi:application"]
     environment : [{ name : "DATABASE_URL", value : "${local.db_url}" }]
     logConfiguration : {
       logDriver : "awslogs",
@@ -49,12 +45,35 @@ resource "aws_ecs_task_definition" "webapp" {
         "awslogs-stream-prefix" : "webapp-log-stream"
       }
     }
+    }, {
+    name : "nginx"
+    image : "${aws_ecr_repository.nginx.repository_url}:latest"
+    essential : true
+    cpu : 10
+    memory : 128
+    portMappings : [{ containerPort : 80, protocol : "tcp" }]
+    logConfiguration : {
+      logDriver : "awslogs",
+      options : {
+        "awslogs-group" : "/ecs/nginx",
+        "awslogs-region" : "us-east-1",
+        "awslogs-stream-prefix" : "nginx-log-stream"
+      }
+    }
   }])
   depends_on = [aws_db_instance.postgresql]
 }
 
+output "task_definition_arn" {
+  value = aws_ecs_task_definition.webapp.arn
+}
+
 resource "aws_cloudwatch_log_group" "webapp-log-group" {
   name              = "/ecs/webapp"
+  retention_in_days = 30
+}
+resource "aws_cloudwatch_log_group" "nginx-log-group" {
+  name              = "/ecs/nginx"
   retention_in_days = 30
 }
 

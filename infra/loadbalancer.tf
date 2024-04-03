@@ -23,7 +23,6 @@ resource "aws_lb_target_group" "default-target-group" {
     matcher             = "200"
   }
 
-
 }
 
 resource "aws_lb_listener" "ecs-alb-http-listener" {

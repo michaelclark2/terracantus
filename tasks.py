@@ -70,3 +70,12 @@ def createsuperuser(c):
     c.run(
         "aws ecs run-task --overrides file://./infra/overrides-createsuperuser.json --task-definition webapp --cluster webapp-cluster --launch-type FARGATE --network-configuration file://./infra/awsvpc.json"
     )
+
+
+@task
+def updatenginx(c):
+    with c.cd("infra/nginx"):
+        c.run(
+            "docker build -t 227557930319.dkr.ecr.us-east-1.amazonaws.com/nginx:latest ."
+        )
+        c.run("docker push 227557930319.dkr.ecr.us-east-1.amazonaws.com/nginx:latest")
