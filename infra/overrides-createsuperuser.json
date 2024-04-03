@@ -1,0 +1,23 @@
+{
+  "containerOverrides": [
+    {
+      "name": "webapp",
+      "environment": [
+        {
+          "name": "DJANGO_SUPERUSER_PASSWORD",
+          "value": "changeme!"
+        },
+        {
+          "name": "DJANGO_SUPERUSER_EMAIL",
+          "value": "admin@terracantus.com"
+        },
+        {
+          "name": "DJANGO_SUPERUSER_USERNAME",
+          "value": "admin"
+        }
+      ],
+      "command": ["python", "manage.py", "createsuperuser", "--noinput"]
+    }
+  ],
+  "taskRoleArn": "arn:aws:iam::227557930319:role/ecs_task_execution_role"
+}
