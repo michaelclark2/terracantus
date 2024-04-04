@@ -36,7 +36,7 @@ resource "aws_ecs_task_definition" "webapp" {
     essential : true
     portMappings : [{ containerPort : 8000, protocol : "tcp" }]
     command : ["gunicorn", "-w", "3", "-b", ":8000", "terracantus.wsgi:application"]
-    environment : [{ name : "DATABASE_URL", value : "${local.db_url}" }, { name : "ALLOWED_HOSTS", value : "terracantus.com" }, { name : "USE_S3", value : "1" }, { name : "AWS_ACCESS_KEY_ID", value : "${local.app_access}" }, { name : "AWS_SECRET_ACCESS_KEY", value : "${local.app_secret}" }]
+    environment : [{ name : "DATABASE_URL", value : "${local.db_url}" }, { name : "ALLOWED_HOSTS", value : "terracantus.com,www.terracantus.com" }, { name : "USE_S3", value : "1" }, { name : "AWS_ACCESS_KEY_ID", value : "${local.app_access}" }, { name : "AWS_SECRET_ACCESS_KEY", value : "${local.app_secret}" }]
     logConfiguration : {
       logDriver : "awslogs",
       options : {

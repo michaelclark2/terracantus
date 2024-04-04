@@ -35,7 +35,7 @@ resource "aws_route53_record" "lb" {
   }
 }
 
-resource "aws_route53_record" "lb_cname" {
+resource "aws_route53_record" "www" {
   zone_id = aws_route53_zone.primary.id
   name    = "www.terracantus.com"
   type    = "CNAME"

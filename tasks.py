@@ -60,6 +60,10 @@ def deploy(c):
         "docker build -t 227557930319.dkr.ecr.us-east-1.amazonaws.com/webapp -f Dockerfile.prod ."
     )
     c.run("docker push 227557930319.dkr.ecr.us-east-1.amazonaws.com/webapp:latest")
+
+
+@task
+def prod(c):
     c.run(
         "aws ecs update-service --cluster webapp-cluster --service webapp-django --force-new-deployment"
     )
