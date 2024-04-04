@@ -39,3 +39,46 @@ output "password" {
   sensitive = true
 }
 
+
+resource "aws_iam_group" "s3buckets" {
+  name = "S3Access"
+}
+
+resource "aws_iam_group_policy" "s3access" {
+  group = aws_iam_group.s3buckets.name
+  policy = jsonencode({
+    Version : "2012-10-17"
+    Statement : [
+      {
+        Action : ["s3:*"]
+        Effect : "Allow"
+        Resource : ["arn:aws:s3:::terracantus-staticfiles", "arn:aws:s3:::terracantus-staticfiles/*"]
+
+      }
+    ]
+  })
+}
+
+resource "aws_iam_user" "terracantus" {
+  name = "terracantus-app"
+}
+
+resource "aws_iam_access_key" "terracantus-app" {
+  user = aws_iam_user.terracantus.name
+}
+
+resource "aws_iam_group_membership" "tc-s3" {
+  name  = "app-s3-access"
+  users = [aws_iam_user.terracantus.name]
+  group = aws_iam_group.s3buckets.name
+}
+
+output "app-access" {
+  value     = aws_iam_access_key.terracantus-app.id
+  sensitive = true
+}
+
+output "app-secret" {
+  value     = aws_iam_access_key.terracantus-app.secret
+  sensitive = true
+}
