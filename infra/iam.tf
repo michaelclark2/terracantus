@@ -82,3 +82,8 @@ output "app-secret" {
   value     = aws_iam_access_key.terracantus-app.secret
   sensitive = true
 }
+
+locals {
+  app_access = aws_iam_access_key.terracantus-app.id
+  app_secret = aws_iam_access_key.terracantus-app.secret
+}
