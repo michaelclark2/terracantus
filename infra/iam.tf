@@ -52,8 +52,7 @@ resource "aws_iam_group_policy" "s3access" {
       {
         Action : ["s3:*"]
         Effect : "Allow"
-        Resource : ["arn:aws:s3:::terracantus-staticfiles", "arn:aws:s3:::terracantus-staticfiles/*"]
-
+        Resource : ["arn:aws:s3:::terracantus-staticfiles", "arn:aws:s3:::terracantus-staticfiles/*", "arn:aws:s3:::terracantus-uploads", "arn:aws:s3:::terracantus-uploads/*"]
       }
     ]
   })
